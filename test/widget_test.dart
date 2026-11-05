@@ -1,30 +1,57 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'package:saku_mobile/main.dart';
+import 'package:saku_mobile/app.dart';
+import 'package:saku_mobile/screens/transactions_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  setUpAll(() {
+    // No network in tests: fall back to the default font.
+    GoogleFonts.config.allowRuntimeFetching = false;
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('Login leads to dashboard with bottom nav', (tester) async {
+    await tester.pumpWidget(const SakuApp());
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    expect(find.text('Saku'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).at(0), 'ryn');
+    await tester.enterText(find.byType(TextField).at(1), 'password123');
+    await tester.tap(find.text('Masuk'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Total saldo semua akun'), findsOneWidget);
+    expect(find.text('Rp 6.389.500'), findsOneWidget);
+
+    await tester.tap(find.text('Riwayat'));
+    await tester.pumpAndSettle();
+    final footer = find.text('Menampilkan 9 dari 9 transaksi');
+    await tester.scrollUntilVisible(footer, 300, scrollable: find.descendant(of: find.byType(TransactionsScreen), matching: find.byType(Scrollable)).first);
+    expect(footer, findsOneWidget);
+  });
+
+  testWidgets('Empty login shows error', (tester) async {
+    await tester.pumpWidget(const SakuApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Masuk'));
     await tester.pump();
+    expect(find.text('Username atau password salah.'), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Every screen builds without overflow', (tester) async {
+    tester.view.physicalSize = const Size(390 * 3, 844 * 3);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const SakuApp());
+    await tester.pumpAndSettle();
+    final nav = tester.state<NavigatorState>(find.byType(Navigator));
+    for (final r in [Routes.home, Routes.addTransaction, Routes.editTransaction, Routes.subscriptions, Routes.closePeriod, Routes.settings]) {
+      nav.pushNamed(r);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: r);
+    }
   });
 }
