@@ -39,6 +39,18 @@ abstract final class AppColors {
   static const warnText = Color(0xFF5E3F00);
   static const warnStrong = Color(0xFF7A5200);
 
+  // Chart series (distinct on white, ordered by visual weight)
+  static const chart = [
+    Color(0xFF0E6B47),
+    Color(0xFFB1431A),
+    Color(0xFF1D4E89),
+    Color(0xFFC98A00),
+    Color(0xFF6B4FA0),
+    Color(0xFF2A9D8F),
+    Color(0xFFD9738F),
+  ];
+  static const chartRest = Color(0xFFA9B6AE);
+
   // Overlay
   static const scrim = Color(0x730B1410);
 }

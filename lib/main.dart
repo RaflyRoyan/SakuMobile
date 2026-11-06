@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+import 'services/app_services.dart';
 
-void main() {
-  runApp(const SakuApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final services = await AppServices.nyata();
+  runApp(SakuApp(services: services));
 }

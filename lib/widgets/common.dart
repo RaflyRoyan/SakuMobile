@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../data/models.dart';
+import '../api/models.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
@@ -123,10 +123,10 @@ class Pill extends StatelessWidget {
   final Color fg;
   final double fontSize;
 
-  factory Pill.budget(BudgetStatus s, String label) => switch (s) {
-        BudgetStatus.aman => Pill(label, bg: AppColors.inBg, fg: AppColors.primaryDark),
-        BudgetStatus.hampir => Pill(label, bg: AppColors.warnBg, fg: AppColors.warnText),
-        BudgetStatus.lewat => Pill(label, bg: AppColors.outBg, fg: AppColors.outText),
+  factory Pill.budget(StatusAnggaran s, String label) => switch (s) {
+        StatusAnggaran.aman => Pill(label, bg: AppColors.inBg, fg: AppColors.primaryDark),
+        StatusAnggaran.hampir => Pill(label, bg: AppColors.warnBg, fg: AppColors.warnText),
+        StatusAnggaran.lewat => Pill(label, bg: AppColors.outBg, fg: AppColors.outText),
       };
 
   @override
@@ -144,10 +144,10 @@ class Pill extends StatelessWidget {
   }
 }
 
-Color budgetColor(BudgetStatus s) => switch (s) {
-      BudgetStatus.aman => AppColors.primary,
-      BudgetStatus.hampir => AppColors.warn,
-      BudgetStatus.lewat => AppColors.out,
+Color budgetColor(StatusAnggaran s) => switch (s) {
+      StatusAnggaran.aman => AppColors.primary,
+      StatusAnggaran.hampir => AppColors.warn,
+      StatusAnggaran.lewat => AppColors.out,
     };
 
 class ProgressBar extends StatelessWidget {
@@ -185,10 +185,10 @@ class IconTile extends StatelessWidget {
   final double size;
   final double radius;
 
-  factory IconTile.forTx(TxType type, String initials) => switch (type) {
-        TxType.keluar => IconTile(text: initials, bg: AppColors.outBg, fg: AppColors.out),
-        TxType.masuk => IconTile(text: initials, bg: AppColors.inBg, fg: AppColors.primary),
-        TxType.transfer => IconTile(text: initials, bg: AppColors.transferBg, fg: AppColors.transfer),
+  factory IconTile.forTx(TipeTransaksi type, String initials) => switch (type) {
+        TipeTransaksi.keluar => IconTile(text: initials, bg: AppColors.outBg, fg: AppColors.out),
+        TipeTransaksi.masuk => IconTile(text: initials, bg: AppColors.inBg, fg: AppColors.primary),
+        TipeTransaksi.transfer => IconTile(text: initials, bg: AppColors.transferBg, fg: AppColors.transfer),
       };
 
   @override
@@ -205,10 +205,10 @@ class IconTile extends StatelessWidget {
   }
 }
 
-Color txColor(TxType t) => switch (t) {
-      TxType.keluar => AppColors.out,
-      TxType.masuk => AppColors.primary,
-      TxType.transfer => AppColors.transfer,
+Color txColor(TipeTransaksi t) => switch (t) {
+      TipeTransaksi.keluar => AppColors.out,
+      TipeTransaksi.masuk => AppColors.primary,
+      TipeTransaksi.transfer => AppColors.transfer,
     };
 
 /// Grey segmented control (Keluar / Masuk / Transfer).
@@ -477,4 +477,33 @@ Future<T?> showSakuSheet<T>(BuildContext context, {required WidgetBuilder builde
       ),
     ),
   );
+}
+
+/// Primary button that shows a spinner while [busy].
+class BusyButton extends StatelessWidget {
+  const BusyButton({super.key, required this.label, required this.busy, required this.onPressed, this.height = 54, this.color = AppColors.primary});
+
+  final String label;
+  final bool busy;
+  final VoidCallback? onPressed;
+  final double height;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: FilledButton(
+        onPressed: busy ? null : onPressed,
+        style: FilledButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        child: busy ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white)) : Text(label),
+      ),
+    );
+  }
 }
