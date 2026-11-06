@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0E6B47"/><stop offset="1" stop-color="#0B3B2A"/></linearGradient></defs><rect width="512" height="512" fill="url(#bg)"/>  <!-- Two notes peeking out of the wallet -->
+  <rect x="136" y="112" width="228" height="128" rx="24" fill="#FFC2A8" transform="rotate(-9 250 176)"/>
+  <rect x="160" y="128" width="228" height="128" rx="24" fill="#9BE7BC" transform="rotate(5 274 192)"/>
+  <circle cx="274" cy="168" r="18" fill="#0E6B47" opacity="0.35" transform="rotate(5 274 192)"/>
+  <!-- Wallet body -->
+  <rect x="88" y="196" width="336" height="220" rx="52" fill="#F2F4F1"/>
+  <clipPath id="body"><rect x="88" y="196" width="336" height="220" rx="52"/></clipPath><rect x="88" y="196" width="336" height="46" fill="#C8F0D8" clip-path="url(#body)"/>
+  <!-- Strap + button -->
+  <rect x="300" y="262" width="148" height="96" rx="48" fill="#0E6B47"/>
+  <circle cx="352" cy="310" r="20" fill="#C8F0D8"/></svg>
